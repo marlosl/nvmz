@@ -58,6 +58,14 @@ else
   return
 fi
 
+PACKAGE_VERSION=$(cat package.json \
+  | grep version \
+  | head -1 \
+  | awk -F: '{ print $2 }' \
+  | sed 's/[",]//g')
+
+echo $PACKAGE_VERSION
+
 # Autoload nvm when finding a .nvmrc file in the current directory
 # Adapted from: https://github.com/nvm-sh/nvm#zsh
 if zstyle -t ':omz:plugins:nvm' autoload; then
