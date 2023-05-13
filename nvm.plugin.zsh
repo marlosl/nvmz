@@ -58,14 +58,6 @@ else
   return
 fi
 
-PACKAGE_VERSION=$(cat package.json \
-  | grep version \
-  | head -1 \
-  | awk -F: '{ print $2 }' \
-  | sed 's/[",]//g')
-
-echo $PACKAGE_VERSION
-
 # Autoload nvm when finding a .nvmrc file in the current directory
 # Adapted from: https://github.com/nvm-sh/nvm#zsh
 if zstyle -t ':omz:plugins:nvm' autoload; then
@@ -74,8 +66,13 @@ if zstyle -t ':omz:plugins:nvm' autoload; then
     local nvmrc_path="$(nvm_find_nvmrc)"
     local nvm_silent=""
     zstyle -t ':omz:plugins:nvm' silent-autoload && nvm_silent="--silent"
-
-    if [[ -n "$nvmrc_path" ]]; then
+    if [[ -f "./package.json" ]]; then
+        local pkg_major_version="$(cat package.json | grep node | head -1 | awk -F: '{ print $2 }' | sed 's/[",^]//g' | awk -F. '{ print $1 }')"
+        local curr_major_version="$(nvm version | sed 's/[",^v]//g' | awk -F. '{ print $1 }')"
+      if [[ "$pkg_major_version" != "$curr_major_version" ]]; then
+        nvm use $pkg_major_version
+      fi
+    elif [[ -n "$nvmrc_path" ]]; then
       local nvmrc_node_version=$(nvm version $(cat "$nvmrc_path" | tr -dc '[:print:]'))
 
       if [[ "$nvmrc_node_version" = "N/A" ]]; then
