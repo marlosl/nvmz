@@ -1,4 +1,4 @@
-#compdef nvm
+#compdef nvmz
 #autoload
 
 [[ -f "$NVM_DIR/nvm.sh" ]] || return 0
@@ -6,7 +6,7 @@
 local -a _1st_arguments
 _1st_arguments=(
   'help:show help'
-  '--version:print out the latest released version of nvm'
+  '--version:print out the latest released version of nvmz'
   'install:download and install a version in <node|iojs|node version number>'
   'install-latest-npm:download and install the latest npm version'
   'uninstall:uninstall a version'
